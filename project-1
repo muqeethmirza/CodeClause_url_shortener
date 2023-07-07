@@ -1,0 +1,20 @@
+import pyshorteners
+from tkinter import *
+def cut():
+    ulink=textbox1.get()
+    store=pyshorteners.Shortener().tinyurl.short(ulink)
+    textbox2.insert(END,store)
+ui=Tk()
+ui.title("url shortener")
+ui.geometry("800x500")
+ui.config(bg="lightblue")
+Label(ui,text="{code clause};",bg="white",fg="blue",font="impack 30 bold").pack(fill="y")
+Label(ui,text="Project-1  URL SHORTENER",fg="black",bg="white",font="impack 15 bold").pack(pady=20)
+Label(ui,text="Enter url",fg="black",bg="light blue",font="impack 10 bold").pack(fill="y")
+textbox1=Entry(ui,font="impack 10 bold",bd=10,bg="white",width=80)
+textbox1.pack()
+Button(ui,text="Shorten",bg="white",bd="10",fg="black",font="impack 15 bold",command=cut).pack(pady=20)
+textbox2=Entry(ui,font="impack 10 bold",bd=10,bg="white",width=50)
+textbox2.pack()
+Label(ui,text="~~~Mirza khader baig",fg="black",bg="light blue",font="impack 10 bold",pady=50).pack()
+mainloop()
