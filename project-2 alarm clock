@@ -1,0 +1,45 @@
+from tkinter import *
+from tkinter import messagebox
+import time
+import winsound
+
+format=time.strftime("%H:%M")
+
+def alarm():
+    usertime=utime.get()
+    if usertime=="":
+        messagebox.askretrycancel("please enter valid input")
+    else:
+        while True:
+            time.sleep(1)
+            if usertime == time.strftime("%H:%M"):
+                play_alarm()
+                m=messagebox.showinfo(f"{mis.get()}")
+                if m=="ok":
+                    break
+
+
+
+def play_alarm():
+    frequency=2500
+    duration=10000
+    winsound.Beep(frequency,duration)
+
+ui=Tk()
+ui.title("Alarm clock")
+ui.geometry("400x400")
+ui.config(bg="light blue")
+image=PhotoImage(file="images (2).png")
+img=Label(ui,image=image).place(x=80,y=0)
+time_label=Label(ui,fg="black",bd=10,bg="white",font=("cambria",15,"bold"),width=20)
+time_label.config(text=format)
+time_label.pack(pady=150,padx=150)
+Label(ui,text="HOUR  MIN",fg="black",bd=10,bg="light blue",font=("cambria",7,"bold")).place(x=130,y=240)
+Label(ui,text="Enter time:",fg="black",bd=10,bg="light blue",font=("cambria",15,"bold")).place(x=10,y=240)
+utime=StringVar()
+usersInput=Entry(ui,textvariable=utime,font=("Arial Narrow",15),width=10,bd=5).place(x=135,y=240)
+Label(ui,text="Message:",fg="black",bd=10,bg="light blue",font=("cambria",15,"bold")).place(x=10,y=275)
+mis=StringVar()
+usersmssg=Entry(ui,textvariable=mis,font=("Arial Narrow",15),width=15,bd=5).place(x=135,y=280)
+bt=Button(ui,text="Set Alarm",font=("Aerial",10,"bold"),width=15,bd=10,bg="light green",fg="black",command=alarm).place(x=150,y=340)
+mainloop()
