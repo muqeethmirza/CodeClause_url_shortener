@@ -1,0 +1,111 @@
+import random
+pygame.init()
+
+ui_w = 800
+ui_h = 800
+c1 = (255, 255, 255)
+c2 = (0, 0, 255)
+c3 = (255, 255, 255)
+E_W = 40
+E_H = 50
+O_W = 80
+O_G = 200
+
+UI = pygame.display.set_mode((ui_w, ui_h))
+pygame.display.set_caption("Flappy Bird")
+bird_image = pygame.image.load("bird.jpg")
+bird_image = pygame.transform.scale(bird_image, (E_W, E_H))
+bg=pygame.image.load("eagle-2045655_640.jpg")
+bg=pygame.transform.scale(bg,(ui_w,ui_h))
+
+class Bird:
+    def __init__(self):
+        self.x = 100
+        self.y = ui_h // 2
+        self.velocity = 1
+
+    def flap(self):
+        self.velocity = -4
+
+    def move(self):
+        self.velocity += 0.2
+        self.y += self.velocity
+
+    def draw(self):
+        UI.blit(bird_image, (self.x, self.y))
+class Pipe:
+    def __init__(self, x):
+        self.x = x
+        self.height = random.randint(100, 400)
+
+    def move(self):
+        self.x -= 3
+
+    def draw(self):
+        pygame.draw.rect(UI, c3, (self.x, 0, O_W, self.height))
+        pygame.draw.rect(UI, c3, (self.x, self.height + O_G, O_W, ui_h - self.height - O_G))
+
+bird = Bird()
+pipes = [Pipe(ui_w + i * 300) for i in range(3)]
+clock = pygame.time.Clock()
+
+def kill():
+    killsound=("wingflap_fast-7139.mp3")
+    pygame.mixer.music.load(killsound)
+    pygame.mixer.music.play()
+
+def crash():
+    scream=("male-scream-in-fear-123079.mp3")
+    pygame.mixer.music.load(scream)
+    pygame.mixer.music.play()
+
+def game_loop():
+    score = 0
+    running = True
+
+    while running:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_SPACE:
+                    kill()
+                    bird.flap()
+
+        bird.move()
+
+        for pipe in pipes:
+            pipe.move()
+            if pipe.x + O_W < 0:
+                pipe.x = ui_w
+                pipe.height = random.randint(100, 400)
+                score += 1
+
+            # Check for collision
+            if bird.x + E_W > pipe.x and bird.x < pipe.x + O_W:
+                if bird.y < pipe.height or bird.y + E_H > pipe.height + O_G:
+                    crash()
+                # return False
+        # Check for out of screen
+        if bird.y < 0 or bird.y + E_H > ui_h:
+            crash()
+            running = False
+
+
+        UI.blit(bg,(0,0))
+
+        for pipe in pipes:
+            pipe.draw()
+
+        bird.draw()
+
+        pygame.display.update()
+        clock.tick(60)
+
+    print("Your score:", score)
+    pygame.quit()
+
+if __name__ == "__main__":
+    game_loop()
+
+
